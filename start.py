@@ -1,4 +1,3 @@
 import my_imp
 
-my_imp.my_hello()
- 
+my_imp.my_menu()

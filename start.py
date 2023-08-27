@@ -1,4 +1,4 @@
 import my_imp
 
-my_imp.my_hello()
- 
+my_imp.todo.load_from_csv(my_imp.filename)
+my_imp.menu()

@@ -43,19 +43,26 @@ class ToDoList:
                 search_string in task['name'] or
                 search_string in task['priority']]
 
-    def search_index(self, search_string):
+    def search_index(self):
+        search_task = input("Enter name or priority of wanted task:\n")
+        a = 0
         for task in todo.tasks:
-            if search_string in task:
-                for fields in task:
-                    print(fields)
+            if search_task in task['name'] :
+                return a
+            elif search_task not in task['name']:
+                a += 1
 
     def edit_task(self, index, field, value):
         if 0 <= index < len(self.tasks):
             self.tasks[index][field] = value
 
-    def delete_task(self, index):
-        if 0 <= index < len(self.tasks):
-            del self.tasks[index]
+    def delete_task_by_name(self, name):
+        tasks_to_remove = [task for task in self.tasks if task['name'] == name]
+        for task in tasks_to_remove:
+            self.tasks.remove(task)
+
+
+
 
     def save_to_csv(self, filename):
         with open(filename, '+a', newline='') as csvfile:
@@ -79,7 +86,11 @@ class ToDoList:
                 fieldnames = ['name', 'description', 'priority', 'datetime']
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
-
+    def clear_csv(self,filename):
+            with open(filename, 'w', newline='') as csvfile:
+                fieldnames = ['name', 'description', 'priority', 'datetime']
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
 
 todo = ToDoList()
 
@@ -125,8 +136,12 @@ def menu():
 
             os.system("pause")
         elif menu_nav == "3":
-            search_task = input("Enter name or priority of wanted task:\n")
-            todo.search_index(search_task)
+            todo.load_from_csv(filename)
+            task_name_to_delete = input("Enter name of task to delete: ")
+            todo.delete_task_by_name(task_name_to_delete)
+            todo.clear_csv(filename)
+            todo.save_to_csv(filename)
+
         # elif menu_nav=="4":
         #     #anther action
         # elif menu_nav=="5":

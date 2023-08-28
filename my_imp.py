@@ -1,111 +1,33 @@
-import csv
+import todo_class
+from datetime import datetime
 import os
-from datetime import datetime, timedelta
+
+todo = todo_class.ToDoList()
 
 filename = "tasks.csv"
-
-
-class ToDoList:
-    def __init__(self):
-        self.tasks = []
-
-    def add_task(self, name, description, priority, datetime):
-        task = {
-            'name': name,
-            'description': description,
-            'priority': priority,
-            'datetime': datetime
-        }
-        self.tasks.append(task)
-
-    def show_tasks(self, timeframe):
-        now = datetime.now()
-        if timeframe == 'month':
-            filtered_tasks = [
-                task for task in self.tasks if task['datetime'].month == now.month]
-        elif timeframe == 'week':
-            week_start = now - timedelta(days=now.weekday())
-            week_end = week_start + timedelta(days=6)
-            filtered_tasks = [
-                task for task in self.tasks if week_start <= task['datetime'] <= week_end]
-        elif timeframe == 'day':
-            filtered_tasks = [
-                task for task in self.tasks if task['datetime'].date() == now.date()]
-        else:
-            filtered_tasks = self.tasks
-        for row in filtered_tasks:
-            for i in row:
-                print(f"[{row[i]}];", end="")
-            print("")
-
-    def search_tasks(self, search_string):
-        return [task for task in self.tasks if
-                search_string in task['name'] or
-                search_string in task['priority']]
-
-    def search_index(self):
-        search_task = input("Enter name or priority of wanted task:\n")
-        a = 0
-        for task in todo.tasks:
-            if search_task in task['name'] :
-                return a
-            elif search_task not in task['name']:
-                a += 1
-
-    def edit_task(self, index, field, value):
-        if 0 <= index < len(self.tasks):
-            self.tasks[index][field] = value
-
-    def delete_task_by_name(self, name):
-        tasks_to_remove = [task for task in self.tasks if task['name'] == name]
-        for task in tasks_to_remove:
-            self.tasks.remove(task)
-
-
-
-
-    def save_to_csv(self, filename):
-        with open(filename, '+a', newline='') as csvfile:
-            fieldnames = ['name', 'description', 'priority', 'datetime']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            for task in self.tasks:
-                writer.writerow(task)
-
-    def load_from_csv(self, filename):
-
-        self.tasks = []
-        try:
-            with open(filename, 'r') as csvfile:
-                reader = csv.DictReader(csvfile)
-                for row in reader:
-                    row['datetime'] = datetime.strptime(
-                        row['datetime'], '%Y-%m-%d %H:%M:%S')
-                    self.tasks.append(row)
-        except (FileNotFoundError):
-            with open(filename, 'w', newline='') as csvfile:
-                fieldnames = ['name', 'description', 'priority', 'datetime']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                writer.writeheader()
-    def clear_csv(self,filename):
-            with open(filename, 'w', newline='') as csvfile:
-                fieldnames = ['name', 'description', 'priority', 'datetime']
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                writer.writeheader()
-
-todo = ToDoList()
 
 
 def menu():
     ex = False
     while ex != True:
         menu_nav = input(
-            "Welcome!\n1.Create task\n2.Show tasks\n3.Edit task\n4.Delete task\n0.Exit\n: ")
+            "Welcome!\n1.Create task\n2.Show tasks\n3.Delete task\n4.Edit task\n0.Exit\n: ")
         if menu_nav == "1":
+            os.system('cls')
             todo.tasks.clear()
             task_name = input("Enter name of task: ")
             description = input("Enter description of task: ")
-            priority = input(
-                "Enter priority of task\n1-high;\n2-medium;\n3-low\n: ")
+            while True:
+                priority = input(
+                    "Enter priority of task\n1-high;\n2-medium;\n3-low\n: ")
+                if priority == '1':
+                    break
+                elif priority == '2':
+                    break
+                elif priority == '3':
+                    break
+                else:
+                    print("Priority might be in range between 1 and 3 only.")
             print("Enter date of task:")
             day = int(input("Enter day:"))
             month = int(input("Enter month:"))
@@ -118,10 +40,11 @@ def menu():
                           datetime(year, month, day, hour, min))
             todo.save_to_csv(filename)
         elif menu_nav == "2":
+            os.system('cls')
             todo.load_from_csv(filename)
             while True:
                 choise = input(
-                    "Choose the period by wich wodl you like to show tasks:\n1-Month\n2-Week\n3-Day\n:")
+                    "Choose the period by wich woudl you like to show tasks:\n1-Month\n2-Week\n3-Day\n4-All\n:")
                 if choise == "1":
                     todo.show_tasks("month")
                     break
@@ -131,23 +54,59 @@ def menu():
                 elif choise == "3":
                     todo.show_tasks("day")
                     break
+                elif choise == "4":
+                    while True:
+                        field = input(
+                            "Which what parameter would you like to sort the tasks?\n1-Name\n2-Priority\n: ")
+                        if field == '1':
+                            todo.sort_by_name()
+                            break
+                        elif field == '2':
+                            todo.sort_by_priority()
+                            break
+                        else:
+                            print("Wrong choise.")
+                    todo.show_tasks("all")
+                    break
                 else:
                     print("Wrong choise")
 
             os.system("pause")
         elif menu_nav == "3":
+            os.system('cls')
             todo.load_from_csv(filename)
             task_name_to_delete = input("Enter name of task to delete: ")
             todo.delete_task_by_name(task_name_to_delete)
             todo.clear_csv(filename)
             todo.save_to_csv(filename)
 
-        # elif menu_nav=="4":
-        #     #anther action
-        # elif menu_nav=="5":
-        #     #anther action
+        elif menu_nav == "4":
+            os.system('cls')
+            todo.load_from_csv(filename)
+            index = todo.search_index()
+            while True:
+                field = input(
+                    "Chooce field, wold you like to edit\n1-Name\n2-Description\n3-Priority\n4-Date and time\n:")
+                if field == "1":
+                    field = 'name'
+                    break
+                elif field == '2':
+                    field = 'description'
+                    break
+                elif field == '3':
+                    field = 'priority'
+                    break
+                elif field == '4':
+                    field = 'datetime'
+                    break
+                else:
+                    print("Wrong choise.")
+            value = input("Enter new value\n: ")
+
+            todo.edit_task(index, field, value)
+            todo.clear_csv(filename)
+            todo.save_to_csv(filename)
         elif menu_nav == "0":
-            # exit program
             ex = True
         else:
             print("You make wrong choise, try again.")

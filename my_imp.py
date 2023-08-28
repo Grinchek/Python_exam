@@ -10,6 +10,7 @@ filename = "tasks.csv"
 def menu():
     ex = False
     while ex != True:
+        os.system('cls')
         menu_nav = input(
             "Welcome!\n1.Create task\n2.Show tasks\n3.Delete task\n4.Edit task\n0.Exit\n: ")
         if menu_nav == "1":
@@ -35,29 +36,32 @@ def menu():
             print("Enter time of task:")
             hour = int(input("Enter hour:"))
             min = int(input("Enter minutes:"))
-
-            todo.add_task(task_name, description, priority,
-                          datetime(year, month, day, hour, min))
+            try:
+                todo.add_task(task_name, description, priority,
+                              datetime(year, month, day, hour, min))
+            except (ValueError):
+                print("You entered incorrect date or time.")
+                os.system('pause')
             todo.save_to_csv(filename)
         elif menu_nav == "2":
             os.system('cls')
             todo.load_from_csv(filename)
             while True:
-                choise = input(
-                    "Choose the period by wich woudl you like to show tasks:\n1-Month\n2-Week\n3-Day\n4-All\n:")
-                if choise == "1":
+                choice = input(
+                    "Select the period for which you want to see the tasks:\n1-Month\n2-Week\n3-Day\n4-All\n:")
+                if choice == "1":
                     todo.show_tasks("month")
                     break
-                elif choise == "2":
+                elif choice == "2":
                     todo.show_tasks("week")
                     break
-                elif choise == "3":
+                elif choice == "3":
                     todo.show_tasks("day")
                     break
-                elif choise == "4":
+                elif choice == "4":
                     while True:
                         field = input(
-                            "Which what parameter would you like to sort the tasks?\n1-Name\n2-Priority\n: ")
+                            "By which parameter you want to sort tasks?\n1-Name\n2-Priority\n: ")
                         if field == '1':
                             todo.sort_by_name()
                             break
@@ -65,11 +69,11 @@ def menu():
                             todo.sort_by_priority()
                             break
                         else:
-                            print("Wrong choise.")
+                            print("Wrong choice.")
                     todo.show_tasks("all")
                     break
                 else:
-                    print("Wrong choise")
+                    print("Wrong choice")
 
             os.system("pause")
         elif menu_nav == "3":
@@ -86,27 +90,46 @@ def menu():
             index = todo.search_index()
             while True:
                 field = input(
-                    "Chooce field, wold you like to edit\n1-Name\n2-Description\n3-Priority\n4-Date and time\n:")
+                    "Select the field you want to edit:\n1-Name\n2-Description\n3-Priority\n4-Date and time\n:")
                 if field == "1":
                     field = 'name'
+                    value = input("Enter new value\n: ")
+                    todo.edit_task(index, field, value)
                     break
                 elif field == '2':
                     field = 'description'
+                    value = input("Enter new value\n: ")
+                    todo.edit_task(index, field, value)
                     break
                 elif field == '3':
                     field = 'priority'
+                    value = input("Enter new value\n: ")
+                    todo.edit_task(index, field, value)
                     break
                 elif field == '4':
                     field = 'datetime'
+                    print("Enter date of task:")
+                    day = int(input("Enter day:"))
+                    month = int(input("Enter month:"))
+                    year = int(input("Enter year:"))
+                    print("Enter time of task:")
+                    hour = int(input("Enter hour:"))
+                    min = int(input("Enter minutes:"))
+                    try:
+                        value = datetime(
+                            year, month, day, hour, min)
+                        todo.edit_task(index, field, value)
+                    except (ValueError):
+                        print("You entered incorrect date or time.")
+                        os.system('pause')
                     break
                 else:
-                    print("Wrong choise.")
-            value = input("Enter new value\n: ")
-
-            todo.edit_task(index, field, value)
+                    print("Wrong choice.")
+            # value = input("Enter new value\n: ")
+            # todo.edit_task(index, field, value)
             todo.clear_csv(filename)
             todo.save_to_csv(filename)
         elif menu_nav == "0":
             ex = True
         else:
-            print("You make wrong choise, try again.")
+            print("You make wrong choice, try again.")

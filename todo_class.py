@@ -22,19 +22,43 @@ class ToDoList:
         if timeframe == 'month':
             filtered_tasks = [
                 task for task in self.tasks if task['datetime'].month == now.month]
+            if len(filtered_tasks) > 0:
+                for row in filtered_tasks:
+                    for i in row:
+                        print(f"[{row[i]}];", end="")
+                    print("")
+            else:
+                print("The list is empty")
         elif timeframe == 'week':
             week_start = now - timedelta(days=now.weekday())
             week_end = week_start + timedelta(days=6)
             filtered_tasks = [
                 task for task in self.tasks if week_start <= task['datetime'] <= week_end]
+            if len(filtered_tasks) > 0:
+                for row in filtered_tasks:
+                    for i in row:
+                        print(f"[{row[i]}];", end="")
+                    print("")
+            else:
+                print("The list is empty")
         elif timeframe == 'day':
             filtered_tasks = [
                 task for task in self.tasks if task['datetime'].date() == now.date()]
+            if len(filtered_tasks) > 0:
+                for row in filtered_tasks:
+                    for i in row:
+                        print(f"[{row[i]}];", end="")
+                    print("")
+            else:
+                print("The list is empty")
         elif timeframe == 'all':
-            for row in self.tasks:
-                for i in row:
-                    print(f"[{row[i]}];", end="")
-                print("")
+            if len(self.tasks) > 0:
+                for row in self.tasks:
+                    for i in row:
+                        print(f"[{row[i]}];", end="")
+                    print("")
+            else:
+                print("The list is empty")
 
     def search_tasks(self, search_string):
         return [task for task in self.tasks if

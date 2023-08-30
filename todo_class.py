@@ -42,8 +42,7 @@ class ToDoList:
             else:
                 print("The list is empty")
         elif timeframe == 'day':
-            filtered_tasks = [
-                task for task in self.tasks if task['datetime'].date() == now.date()]
+            filtered_tasks = [task for task in self.tasks if task['datetime'].date() == now.date()]
             if len(filtered_tasks) > 0:
                 for row in filtered_tasks:
                     for i in row:
@@ -112,8 +111,8 @@ class ToDoList:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
 
-    def sort_by_name(self):
-        self.tasks.sort(key=lambda task: task['name'])
+    def sort_by_datetime(self):
+        self.tasks.sort(key=lambda task: task['datetime'])
 
     def sort_by_priority(self):
         self.tasks.sort(key=lambda task: task['priority'])

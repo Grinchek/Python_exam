@@ -30,15 +30,15 @@ def menu():
                 else:
                     print("Priority might be in range between 1 and 3 only.")
             print("Enter date of task:")
-            day = int(input("Enter day:"))
-            month = int(input("Enter month:"))
-            year = int(input("Enter year:"))
+            day = (input("Enter day:"))
+            month = (input("Enter month:"))
+            year = (input("Enter year:"))
             print("Enter time of task:")
-            hour = int(input("Enter hour:"))
-            min = int(input("Enter minutes:"))
+            hour = (input("Enter hour:"))
+            min = (input("Enter minutes:"))
             try:
                 todo.add_task(task_name, description, priority,
-                              datetime(year, month, day, hour, min))
+                              datetime(int(year), int(month), int(day), int(hour), int(min)))
             except (ValueError):
                 print("You entered incorrect date or time.")
                 os.system('pause')
@@ -61,9 +61,9 @@ def menu():
                 elif choice == "4":
                     while True:
                         field = input(
-                            "By which parameter you want to sort tasks?\n1-Name\n2-Priority\n: ")
+                            "By which parameter you want to sort tasks?\n1-Datetime\n2-Priority\n: ")
                         if field == '1':
-                            todo.sort_by_name()
+                            todo.sort_by_datetime()
                             break
                         elif field == '2':
                             todo.sort_by_priority()
